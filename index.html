@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Example Configuration</title>
+  </head>
+  <body>
+    <h1>API Key Configuration</h1>
+    <form>
+      <label for="api_key">API Key:</label>
+      <input type="text" id="api_key" name="api_key">
+      <button type="button" id="submit">Save</button>
+    </form>
+    <script>
+      document.getElementById('submit').addEventListener('click', function() {
+        var apiKey = document.getElementById('api_key').value;
+        var returnData = {
+          'apiKey': apiKey
+        };
+        localStorage.setItem('config', JSON.stringify(returnData));
+        document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(returnData));
+      });
+    </script>
+  </body>
+</html>
