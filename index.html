@@ -7,25 +7,19 @@
     <h1>API Key Configuration</h1>
     <form>
       <label for="api_key">API Key:</label>
-      <input type="text" id="api_key" name="api_key"><br>
-      
-      <label for="color_scheme">Color Scheme:</label><br>
-      <input type="radio" id="white_on_black" name="color_scheme" value="white_on_black">
-      <label for="white_on_black">White Text on Black Background</label><br>
-      <input type="radio" id="black_on_white" name="color_scheme" value="black_on_white">
-      <label for="black_on_white">Black Text on White Background</label><br>
-      
+      <input type="text" id="api_key" name="api_key">
       <button type="button" id="submit">Save</button>
     </form>
-    <p>To use PebbleGPT you will need to provide your own API key</p>
-    <a href="https://platform.openai.com/account/api-keys">You can obtain your own API key from OpenAI by clicking here</a>
+    <p>To use PebbleGPT you will need to provide your own API key.</p>
+    <p>You can obtain your own API key from OpenAI by going to the following website:</p>
+    <p>https://platform.openai.com/account/api-keys</p>
+    <p>Then paste your api key here, hit save and you're ready to go! Also requires a rebble subscription for the 
+    voice transcription to work.</p>
     <script>
       document.getElementById('submit').addEventListener('click', function() {
         var apiKey = document.getElementById('api_key').value;
-        var colorScheme = document.querySelector('input[name="color_scheme"]:checked').value;
         var returnData = {
-          'apiKey': apiKey,
-          'colorScheme': colorScheme
+          'apiKey': apiKey
         };
         localStorage.setItem('config', JSON.stringify(returnData));
         document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(returnData));
