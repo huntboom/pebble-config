@@ -1,29 +1,103 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Example Configuration</title>
-  </head>
-  <body>
-    <h1>API Key Configuration</h1>
-    <form>
-      <label for="api_key">API Key:</label>
-      <input type="text" id="api_key" name="api_key">
-      <button type="button" id="submit">Save</button>
+<head>
+    <title>PebbleGPT Configuration</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+        h1 { text-align: center; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { display: block; width: 100%; padding: 10px; margin-top: 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        .description { font-size: 0.9em; color: #666; margin-top: 5px; }
+        .api-key-section { margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <h1>PebbleGPT Configuration</h1>
+    
+    <p>To use PebbleGPT you will need your own API key(s) and a Rebble subscription (for voice transcription).</p>
+
+    <form id="config-form">
+        <label for="apiProvider">I would like PebbleAI to use this provider:</label>
+        <select id="apiProvider" name="apiProvider">
+            <option value="openai">OpenAI</option>
+            <option value="claude">Claude</option>
+            <option value="gemini">Gemini</option>
+        </select>
+
+        <div class="api-key-section">
+            <label for="openaiApiKey">OpenAI API Key:</label>
+            <input type="text" id="openaiApiKey" name="openaiApiKey">
+        </div>
+
+        <div class="api-key-section">
+            <label for="claudeApiKey">Claude API Key:</label>
+            <input type="text" id="claudeApiKey" name="claudeApiKey">
+        </div>
+
+        <div class="api-key-section">
+            <label for="geminiApiKey">Gemini API Key:</label>
+            <input type="text" id="geminiApiKey" name="geminiApiKey">
+        </div>
+
+        <label for="model">Model (for OpenAI):</label>
+        <select id="model" name="model">
+            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+            <option value="gpt-4">GPT-4</option>
+        </select>
+
+        <label for="systemPrompt">System Prompt:</label>
+        <input type="text" id="systemPrompt" name="systemPrompt">
+        <p class="description">Any context for your queries. For example: <em>Respond with one sentence.</em></p>
+
+        <label for="temperature">Temperature:</label>
+        <input type="range" id="temperature" name="temperature" min="0" max="2" step="0.1" value="0.7">
+        <p class="description">How creative the responses should be. Default: 0.7</p>
+
+        <label for="vibrate">
+            <input type="checkbox" id="vibrate" name="vibrate" checked>
+            Vibrate on response
+        </label>
+
+        <button type="submit">Save Settings</button>
     </form>
-    <p>To use PebbleGPT you will need to provide your own API key.</p>
-    <p>You can obtain your own API key from OpenAI by going to the following website:</p>
-    <p>https://platform.openai.com/account/api-keys</p>
-    <p>Then paste your api key here, hit save and you're ready to go! Also requires a rebble subscription for the 
-    voice transcription to work.</p>
+
     <script>
-      document.getElementById('submit').addEventListener('click', function() {
-        var apiKey = document.getElementById('api_key').value;
-        var returnData = {
-          'apiKey': apiKey
-        };
-        localStorage.setItem('config', JSON.stringify(returnData));
-        document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(returnData));
-      });
+        function saveOptions() {
+            var options = {
+                apiProvider: document.getElementById('apiProvider').value,
+                openaiApiKey: document.getElementById('openaiApiKey').value,
+                claudeApiKey: document.getElementById('claudeApiKey').value,
+                geminiApiKey: document.getElementById('geminiApiKey').value,
+                model: document.getElementById('model').value,
+                systemPrompt: document.getElementById('systemPrompt').value,
+                temperature: parseFloat(document.getElementById('temperature').value),
+                vibrate: document.getElementById('vibrate').checked
+            };
+            return options;
+        }
+
+        function loadOptions() {
+            var options = JSON.parse(decodeURIComponent(location.search.substring(1).split('options=')[1] || '{}'));
+            document.getElementById('apiProvider').value = options.apiProvider || 'openai';
+            document.getElementById('openaiApiKey').value = options.openaiApiKey || '';
+            document.getElementById('claudeApiKey').value = options.claudeApiKey || '';
+            document.getElementById('geminiApiKey').value = options.geminiApiKey || '';
+            document.getElementById('model').value = options.model || 'gpt-3.5-turbo';
+            document.getElementById('systemPrompt').value = options.systemPrompt || '';
+            document.getElementById('temperature').value = options.temperature || 0.7;
+            document.getElementById('vibrate').checked = options.vibrate !== false;
+        }
+
+        document.getElementById('config-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var options = saveOptions();
+            document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(options));
+        });
+
+        loadOptions();
     </script>
-  </body>
+</body>
 </html>
